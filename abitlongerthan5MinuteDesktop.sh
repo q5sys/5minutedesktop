@@ -43,20 +43,26 @@ env ASSUME_ALWAYS_YES=YES pkg update -f
 pkg install -y xorg-server xinit xauth xscreensaver xf86-input-keyboard xf86-input-mouse qt5 xbrightness  
 
 #Lumina Specific
-wget https://github.com/pcbsd/lumina/archive/master.zip -O lumina-master.zip && unzip lumina-master.zip && cd lumina-master && /usr/local/lib/qt5/bin/qmake ./lumina.pro && make && make install
+wget https://github.com/pcbsd/lumina/archive/master.zip -O /tmp/lumina-master.zip && unzip /tmp/lumina-master.zip && cd /tmp/lumina-master && /usr/local/lib/qt5/bin/qmake ./lumina.pro && make && make install
 
 #PCBSD Specific
-wget https://github.com/pcbsd/pcbsd/archive/master.zip -O pcbsd-master.zip && unzip pcbsd-master.zip
-cd ~/pcbsd-master/src-qt5/libpcbsd/ && /usr/local/lib/qt5/bin/qmake ./libpcbsd.pro && make && make install
-cd ~/pcbsd-master/src-qt5/PCDM/ && /usr/local/lib/qt5/bin/qmake ./PCDM.pro && make && make install
+wget https://github.com/pcbsd/pcbsd/archive/master.zip -O /tmp/pcbsd-master.zip && unzip /tmp/pcbsd-master.zip
+cd /tmp/pcbsd-master/src-qt5/libpcbsd/ && /usr/local/lib/qt5/bin/qmake ./libpcbsd.pro && make && make install
+cd /tmp/pcbsd-master/src-qt5/PCDM/ && /usr/local/lib/qt5/bin/qmake ./PCDM.pro && make && make install
 
+#enable PDCM
 cat << EOF >> /etc/rc.conf
 pcdm_enable="YES"
 EOF
 
+#set up trigger for PCDM
 sed -i '' 's/TWM/PCDMd/' /usr/local/lib/X11/xinit/xinirc
 
+#generate machin-id for Lumina
 dbus-uuidgen > /etc/machine-id
+
+#enable sudo
+sed -e 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/g' /usr/local/etc/sudoers
 
 NO CHANGES YET BELOW THIS LINE
 
