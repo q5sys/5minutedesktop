@@ -1,7 +1,9 @@
 5minutedesktop
 ==========
 
-Script to install a working FreeBSD desktop (web-browser,office applications) in 5 minutes.
+Script to install a working PCBSD desktop in a bit longer than 5 minutes.
+
+Note: This is a work in progress and doesn't work right now... SO DONT USE IT!!!
 
 Contents
 ---------------------------------
