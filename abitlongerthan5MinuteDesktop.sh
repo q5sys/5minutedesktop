@@ -33,28 +33,6 @@
 
 setenv PATH "/sbin:/bin:/usr/sbin:/usr/bin:/usr/games:/usr/local/sbin:/usr/local/bin:/root/bin"
 
-set WM = "NONE"
-
-if ($#argv == 0) then
-	echo "FreeBSD 5 Minute Desktop Build"
-	echo "Usage: $argv[0] i3 or fluxbox"
-	exit 13
-endif
-
-if ($argv[1] == "fluxbox") then
-	set WM = "fluxbox"
-endif
-
-if ($argv[1] == "i3") then 
-	set WM = "i3"
-endif
-
-if ("$WM" == "NONE") then
-	echo "FreeBSD 5 Minute Desktop Build"
-	echo "Usage: $argv[0] i3 or fluxbox"
-	exit 13
-endif
-
 #pkgng needs to be bootstrapped. 
 env ASSUME_ALWAYS_YES=YES pkg bootstrap
 
@@ -62,35 +40,25 @@ env ASSUME_ALWAYS_YES=YES pkg bootstrap
 env ASSUME_ALWAYS_YES=YES pkg update -f
 
 #Install everything
-pkg install -y xorg-server xinit xauth xscreensaver xf86-input-keyboard xf86-input-mouse 
+pkg install -y xorg-server xinit xauth xscreensaver xf86-input-keyboard xf86-input-mouse qt5 xbrightness  
 
-#WM Specific i3 or fluxbox
-if ( $WM == "i3" ) then
-	pkg install -y i3 i3lock i3status
-	foreach dir (`ls /usr/home`)
-		echo "/usr/local/bin/i3" >> /usr/home/$dir/.xinitrc
-		chown $dir /usr/home/$dir/.xinitrc
-	end
-else if ($WM == "fluxbox") then
-	pkg install -y fluxbox
-	foreach dir (`ls /usr/home`)
-		echo "/usr/local/bin/fluxbox" >> /usr/home/$dir/.xinitrc
-		chown $dir /usr/home/$dir/.xinitrc
-	end
-endif
+#Lumina Specific
+wget https://github.com/pcbsd/lumina/archive/master.zip -O lumina-master.zip && unzip lumina-master.zip && cd lumina-master && /usr/local/lib/qt5/bin/qmake ./lumina.pro && make && sudo make install
 
-#If running on Vbox, setup services
-set VBOX = `dmesg|grep -oe VBOX|uniq`
-if ( "$VBOX" == "VBOX" ) then
-        pkg install -y virtualbox-ose-additions
+#PCBSD Specific
+wget https://github.com/pcbsd/pcbsd/archive/master.zip -O pcbsd-master.zip && unzip pcbsd-master.zip
+cd ~/pcbsd-master/src-qt5/libpcbsd/ && /usr/local/lib/qt5/bin/qmake ./libpcbsd.pro && make && make install
+cd ~/pcbsd-master/src-qt5/PCDM/ && /usr/local/lib/qt5/bin/qmake ./PCDM.pro && make && make install
+
 cat << EOF >> /etc/rc.conf
-vboxguest_enable="YES"
-vboxservice_enable="YES"
+pcdm_enable="YES"
 EOF
-else
-#Otherwise, install failsafe drivers with vesa
-pkg install -y xorg-drivers
-endif
+
+sed -i '' 's/TWM/PCDMd/' /usr/local/lib/X11/xinit/xinirc
+
+dbus-uuidgen > /etc/machine-id
+
+NO CHANGES YET BELOW THIS LINE
 
 #Other stuff to make life eaiser
 pkg install -y rxvt-unicode zsh sudo chromium tmux libreoffice gnupg pinentry-curses en-aspell en-hunspell
