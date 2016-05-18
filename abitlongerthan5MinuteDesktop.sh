@@ -40,7 +40,7 @@ env ASSUME_ALWAYS_YES=YES pkg bootstrap
 env ASSUME_ALWAYS_YES=YES pkg update -f
 
 #Install everything
-pkg install -y xorg-server xinit xauth xscreensaver xf86-input-keyboard xf86-input-mouse qt5 xbrightness  
+pkg install -y xorg-server xinit xauth xscreensaver xf86-input-keyboard xf86-input-mouse qt5 xbrightness poppler-qt5
 
 #Lumina Specific
 wget https://github.com/pcbsd/lumina/archive/master.zip -O /tmp/lumina-master.zip && unzip /tmp/lumina-master.zip && cd /tmp/lumina-master && /usr/local/lib/qt5/bin/qmake ./lumina.pro && make && make install
