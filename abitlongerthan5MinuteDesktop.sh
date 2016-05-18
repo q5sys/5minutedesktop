@@ -40,7 +40,7 @@ env ASSUME_ALWAYS_YES=YES pkg bootstrap
 env ASSUME_ALWAYS_YES=YES pkg update -f
 
 #Install everything
-pkg install -y xorg-server xinit xauth xscreensaver xf86-input-keyboard xf86-input-mouse qt5 xbrightness poppler-qt5 qtcreator
+pkg install -y xorg-server xinit xauth xscreensaver xf86-input-keyboard xf86-input-mouse qt5 xbrightness poppler-qt5
 
 #Lumina Specific
 wget https://github.com/pcbsd/lumina/archive/master.zip -O /tmp/lumina-master.zip && unzip /tmp/lumina-master.zip && cd /tmp/lumina-master && /usr/local/lib/qt5/bin/qmake ./lumina.pro && make && make install
@@ -67,7 +67,7 @@ sed -e 's/# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/g' /usr/local/etc/sudoers
 NO CHANGES YET BELOW THIS LINE
 
 #Other stuff to make life eaiser
-pkg install -y rxvt-unicode zsh sudo chromium tmux libreoffice gnupg pinentry-curses en-aspell en-hunspell
+pkg install -y rxvt-unicode zsh sudo chromium tmux libreoffice gnupg lxterminal qupzilla qtcreator geany leafpad oss htop smplauyer viewnior unzip qbittorrent
 
 #necessary for linux compat and chrome/firefox
 echo 'sem_load="YES"' >> /boot/loader.conf
